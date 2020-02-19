@@ -1,5 +1,5 @@
 Experiment ID                :tsp
-Problem Type                 :TSP
+Problem Type                 :TSP2
 Data Input File Name         :berlin52.tsp
 Number of Runs               :50
 Generations per Run          :50

@@ -17,6 +17,7 @@ public class Chromo
 	public double rawFitness;
 	public double sclFitness;
 	public double proFitness;
+	public int tspRep;
 
 /*******************************************************************************
 *                            INSTANCE VARIABLES                                *
@@ -42,6 +43,35 @@ public class Chromo
 			}
 		}
 
+		this.rawFitness = -1;   //  Fitness not yet evaluated
+		this.sclFitness = -1;   //  Fitness not yet scaled
+		this.proFitness = -1;   //  Fitness not yet proportionalized
+	}
+	
+	public Chromo(boolean isTSP, int numCities, boolean rep2)
+	{
+		
+		chromo = "";
+		String gene = "";
+		int firstCity = 0;
+		Set<Integer> usedCities = new HashSet<Integer>();
+		
+		
+		ArrayList<Integer> randnums = new ArrayList<Integer>();
+		
+		for (int i = 1; i <= numCities; i++) 
+		{
+			randnums.add(i);
+		}		
+		Collections.shuffle(randnums);
+		
+		for (int location : randnums)
+		{
+			this.chromo += Character.toChars(location+100);
+		}
+		System.out.println(this.chromo);
+		this.tspRep = 2;
+		// set other member variables
 		this.rawFitness = -1;   //  Fitness not yet evaluated
 		this.sclFitness = -1;   //  Fitness not yet scaled
 		this.proFitness = -1;   //  Fitness not yet proportionalized
@@ -86,6 +116,7 @@ public class Chromo
 			}
 		} // end loop
 		
+		this.tspRep = 1;
 		// set other member variables
 		this.rawFitness = -1;   //  Fitness not yet evaluated
 		this.sclFitness = -1;   //  Fitness not yet scaled

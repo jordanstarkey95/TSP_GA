@@ -37,6 +37,7 @@ public class Search {
 	public static int optimalSolution;
 	
 	public static boolean isTSP;
+	public static int tspRep;
 
 	public static double sumRawFitness;
 	public static double sumRawFitness2;	// sum of squares of fitness
@@ -111,6 +112,14 @@ public class Search {
 		else if (Parameters.problemType.equals("TSP"))
 		{
 			problem = new TSP();
+			tspRep = 1;
+			isTSP = true;
+			optimalSolution = 0;
+		}
+		else if (Parameters.problemType.equals("TSP2"))
+		{
+			problem = new TSP2();
+			tspRep = 2;
 			isTSP = true;
 			optimalSolution = 0;
 		}
@@ -126,9 +135,18 @@ public class Search {
 		child = new Chromo[Parameters.popSize];
 		
 		if (isTSP){
-			bestOfGenChromo = new Chromo(isTSP, Parameters.numGenes);
-			bestOfRunChromo = new Chromo(isTSP, Parameters.numGenes);
-			bestOverAllChromo = new Chromo(isTSP, Parameters.numGenes);
+			if (tspRep == 1)
+			{
+				bestOfGenChromo = new Chromo(isTSP, Parameters.numGenes);
+				bestOfRunChromo = new Chromo(isTSP, Parameters.numGenes);
+				bestOverAllChromo = new Chromo(isTSP, Parameters.numGenes);
+			}
+			else
+			{
+				bestOfGenChromo = new Chromo(isTSP, Parameters.numGenes, true);
+				bestOfRunChromo = new Chromo(isTSP, Parameters.numGenes, true);
+				bestOverAllChromo = new Chromo(isTSP, Parameters.numGenes, true);
+			}
 		}
 		else{
 			bestOfGenChromo = new Chromo();
@@ -160,10 +178,17 @@ public class Search {
 
 			//	Initialize First Generation
 			for (int i=0; i<Parameters.popSize; i++){
-				if (isTSP)
-				{
-					member[i] = new Chromo(isTSP, Parameters.numGenes);
-					child[i] = new Chromo(isTSP, Parameters.numGenes);
+				if (isTSP){
+					if (tspRep == 1)
+					{
+						member[i] = new Chromo(isTSP, Parameters.numGenes);
+						child[i] = new Chromo(isTSP, Parameters.numGenes);
+					}
+					else
+					{
+						member[i] = new Chromo(isTSP, Parameters.numGenes, true);
+						child[i] = new Chromo(isTSP, Parameters.numGenes, true);
+					}
 				}
 				else{
 					member[i] = new Chromo();
