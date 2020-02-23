@@ -361,6 +361,7 @@ public class Chromo
 				validateChildren(child1);
 				validateChildren(child2);
 			}
+			//Validate child chromosomes for unicode representation.
 			else if (Parameters.problemType.equals("TSP2"))
 			{
 				validateChildrenTSP2(child1);
@@ -386,6 +387,7 @@ public class Chromo
 				validateChildren(child1);
 				validateChildren(child2);
 			}
+			//Validate child chromosomes for unicode representation.
 			else if (Parameters.problemType.equals("TSP2"))
 			{
 				validateChildrenTSP2(child1);
@@ -398,7 +400,7 @@ public class Chromo
 
 		case 3:     //  Uniform Crossover - should only be used for TSP2 representation (unicode)?
 
-			// Crossover rate
+			
 			double p = 0.5;
 
 			for(int i = 0; i < (Parameters.numGenes * Parameters.geneSize); i++)
@@ -422,6 +424,7 @@ public class Chromo
 				validateChildren(child1);
 				validateChildren(child2);
 			}
+			//Validate child chromosomes for unicode representation.
 			else if (Parameters.problemType.equals("TSP2"))
 			{
 				validateChildrenTSP2(child1);
