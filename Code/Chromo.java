@@ -67,7 +67,7 @@ public class Chromo
 		
 		for (int location : randnums)
 		{
-			this.chromo += Character.toChars(location+100);
+			this.chromo += Character.toChars(location);
 		}
 		System.out.println(this.chromo);
 		this.tspRep = 2;
@@ -334,7 +334,7 @@ public class Chromo
 			for (int city : citiesToFix)
 			{
 				int validCity = iter.next();
-				gene = Character.toChars(validCity+100).toString();
+				gene = Character.toChars(validCity).toString();
 				temp.replace(city, city+1, gene);
 			}
 			X.chromo = temp.toString();
@@ -372,8 +372,9 @@ public class Chromo
 		case 2:     //  Two Point Crossover
 			
 			// Select 2 random crossover points
-			xoverPoint1 = 1 + (int)(Search.r.nextDouble() * ((Parameters.numGenes * Parameters.geneSize) - 1));
-			xoverPoint2 = 1 + (int)(Search.r.nextDouble() * ((Parameters.numGenes * Parameters.geneSize) - 1));
+			xoverPoint1 = 1 + (Search.r.nextInt(Parameters.numGenes * Parameters.geneSize / 2) - 1);
+			xoverPoint2 = xoverPoint1 + 1 + (Search.r.nextInt(Parameters.numGenes * Parameters.geneSize / 2));
+			
 
 			// Create children from chromosomes of both parents
 			child1.chromo = parent1.chromo.substring(0, xoverPoint1) + parent2.chromo.substring(xoverPoint1, xoverPoint2) + parent1.chromo.substring(xoverPoint2);
