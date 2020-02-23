@@ -410,13 +410,10 @@ public class Chromo
 			
 		case 3:     //  Uniform Crossover 
 
-			
-			double p = 0.5;
-
 			for(int i = 0; i < (Parameters.numGenes * Parameters.geneSize); i++)
 			{
 				randnum = Search.r.nextDouble();
-				if(randnum > p)
+				if(randnum > Parameters.xoverRate)
 				{
 					child1.chromo += parent2.chromo.charAt(i);
 					child2.chromo += parent1.chromo.charAt(i);
