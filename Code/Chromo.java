@@ -18,6 +18,7 @@ public class Chromo
 	public double sclFitness;
 	public double proFitness;
 	public int tspRep;
+	public int numCities; //use this for random integer range generation
 
 /*******************************************************************************
 *                            INSTANCE VARIABLES                                *
@@ -67,10 +68,14 @@ public class Chromo
 		
 		for (int location : randnums)
 		{
-			this.chromo += Character.toChars(location+100);
+			//this.chromo += Character.toChars(location);
+			this.chromo += (char)(location + '0');
+			//System.out.println((char)(location + '0'));
+			//this.chromo += String.valueOf(location);
+			//System.out.println(String.valueOf(location));
 		}
-		System.out.println(this.chromo);
 		this.tspRep = 2;
+		this.numCities = numCities;
 		// set other member variables
 		this.rawFitness = -1;   //  Fitness not yet evaluated
 		this.sclFitness = -1;   //  Fitness not yet scaled
@@ -117,6 +122,7 @@ public class Chromo
 		} // end loop
 		
 		this.tspRep = 1;
+		this.numCities = numCities;
 		// set other member variables
 		this.rawFitness = -1;   //  Fitness not yet evaluated
 		this.sclFitness = -1;   //  Fitness not yet scaled
@@ -194,8 +200,21 @@ public class Chromo
 			this.chromo = mutChromo;
 			break;
 
+		case 2: 	// Replace character for Unicode Representation
+			for (int j=0; j<(Parameters.geneSize * Parameters.numGenes); j++){
+				x = this.chromo.charAt(j);
+				// Generate a random number in the range of the number of cities so that it is valid
+				randnum = Search.r.nextInt(numCities);
+				if (randnum < Parameters.mutationRate){
+					x = (char)randnum;
+				}
+				mutChromo = mutChromo + x;
+			}
+			this.chromo = mutChromo;
+			break; 
+
 		default:
-			System.out.println("ERROR - No mutation method selected");
+			//System.out.println("ERROR - No mutation method selected");
 		}
 	}
 
@@ -304,6 +323,46 @@ public class Chromo
 			X.chromo = temp.toString();
 		}
 	}
+
+	private static void validateChildrenTSP2(Chromo X)
+	{
+		Set<Integer> chromoRange = new HashSet<Integer>();
+		ArrayList<Integer> citiesToFix = new ArrayList<Integer>();
+		System.out.println("LENGTH = " + X.chromo.length());
+		System.out.println("SIZE=" + X.chromo.length());
+		for (int z=0; z< X.chromo.length(); z++)
+		{
+			int curCity = X.chromo.charAt(z) - '0';
+			//System.out.println(curCity);
+			
+			// Check to make sure the city is in range
+			if (curCity > Parameters.numGenes || curCity <= 0)
+				citiesToFix.add(z);
+			// Check to see if city is repear
+			else if (chromoRange.contains(curCity))
+				citiesToFix.add(z);
+			// Valid Unique city
+			else
+				chromoRange.add(curCity);			
+		}
+		Set<Integer> difference = new HashSet<Integer>();
+		difference.addAll(TSP2.range);
+		difference.removeAll(chromoRange);
+		if(!difference.isEmpty())
+		{
+			Iterator<Integer> iter = difference.iterator();
+			StringBuffer temp = new StringBuffer(X.chromo);
+			String gene = "";
+			for (int city : citiesToFix)
+			{
+				int validCity = iter.next();
+				gene += ((char)validCity + '0');
+				temp.replace(city, city+1, gene);
+			}
+			X.chromo = temp.toString();
+		}
+	}
+
 	public static void mateParents(int pnum1, int pnum2, Chromo parent1, Chromo parent2, Chromo child1, Chromo child2){
 
 		int xoverPoint1;
@@ -325,11 +384,74 @@ public class Chromo
 				validateChildren(child1);
 				validateChildren(child2);
 			}
+			else if (Parameters.problemType.equals("TSP2"))
+			{
+				validateChildrenTSP2(child1);
+				validateChildrenTSP2(child2);
+			}
 			break;
 
-		case 2:     //  Two Point Crossover
 
-		case 3:     //  Uniform Crossover
+		case 2:     //  Two Point Crossover
+			
+			// Select 2 random crossover points
+			xoverPoint1 = 1 + (int)(Search.r.nextDouble() * ((Parameters.numGenes * Parameters.geneSize) - 1));
+			xoverPoint2 = 1 + (int)(Search.r.nextDouble() * ((Parameters.numGenes * Parameters.geneSize) - 1));
+
+			// Create children from chromosomes of both parents
+			child1.chromo = parent1.chromo.substring(0, xoverPoint1) + parent2.chromo.substring(xoverPoint1, xoverPoint2) + parent1.chromo.substring(xoverPoint2);
+			child2.chromo = parent2.chromo.substring(0, xoverPoint1) + parent1.chromo.substring(xoverPoint1, xoverPoint2) + parent2.chromo.substring(xoverPoint2);
+
+			// Validate if child chromosomes are valid strings for hex representation. Taken from 1-point xover implementation.
+			if (Parameters.problemType.equals("TSP"))
+			{
+				validateChildren(child1);
+				validateChildren(child2);
+			}
+			else if (Parameters.problemType.equals("TSP2"))
+			{
+				validateChildrenTSP2(child1);
+				validateChildrenTSP2(child2);
+			}
+			break;
+
+			
+
+
+		case 3:     //  Uniform Crossover - should only be used for TSP2 representation (unicode)?
+
+			// Crossover rate
+			double p = 0.5;
+
+			for(int i = 0; i < (Parameters.numGenes * Parameters.geneSize); i++)
+			{
+				randnum = Search.r.nextDouble();
+				if(randnum > p)
+				{
+					child1.chromo += parent2.chromo.charAt(i);
+					child2.chromo += parent1.chromo.charAt(i);
+				}
+				else
+				{
+					child1.chromo += parent1.chromo.charAt(i);
+					child2.chromo += parent2.chromo.charAt(i);
+				}
+			}
+
+			// Validate if child chromosomes are valid strings for hex representation
+			if (Parameters.problemType.equals("TSP"))
+			{
+				validateChildren(child1);
+				validateChildren(child2);
+			}
+			else if (Parameters.problemType.equals("TSP2"))
+			{
+				validateChildrenTSP2(child1);
+				validateChildrenTSP2(child2);
+			}
+			break;
+			
+			
 
 		default:
 			System.out.println("ERROR - Bad crossover method selected");

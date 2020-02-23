@@ -111,14 +111,14 @@ public class Search {
 		}
 		else if (Parameters.problemType.equals("TSP"))
 		{
-			problem = new TSP();
+			problem = new TSP(Parameters.fitnessEval);
 			tspRep = 1;
 			isTSP = true;
-			optimalSolution = 0;
+			optimalSolution = 0; //how do we know the optimal solution for TSP?
 		}
 		else if (Parameters.problemType.equals("TSP2"))
 		{
-			problem = new TSP2();
+			problem = new TSP2(Parameters.fitnessEval);
 			tspRep = 2;
 			isTSP = true;
 			optimalSolution = 0;
