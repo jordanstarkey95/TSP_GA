@@ -193,7 +193,8 @@ public class Chromo
 			}
 			this.chromo = mutChromo;
 			break;
-
+		
+		// case 2 for no mutation	
 		default:
 			System.out.println("ERROR - No mutation method selected");
 		}
@@ -328,8 +329,56 @@ public class Chromo
 			break;
 
 		case 2:     //  Two Point Crossover
+			
+			// Select 2 random crossover points
+			xoverPoint1 = 1 + (int)(Search.r.nextDouble() * (Parameters.numGenes * Parameters.geneSize - 1));
+			xoverPoint2 = 1 + (int)(Search.r.nextDouble() * (Parameters.numGenes * Parameters.geneSize - 1));
 
-		case 3:     //  Uniform Crossover
+			// Create children from chromosomes of both parents
+			child1.chromo = parent1.chromo.substring(0, xoverPoint1) + parent2.chromo.substring(xoverPoint1, xoverPoint2) + parent1.chromo.substring(xoverPoint2);
+			child2.chromo = parent2.chromo.substring(0, xoverPoint1) + parent1.chromo.substring(xoverPoint1, xoverPoint2) + parent2.chromo.substring(xoverPoint2);
+
+			// Validate if child chromosomes are valid strings for hex representation. Taken from 1-point xover implementation.
+			if (Parameters.problemType.equals("TSP"))
+			{
+				validateChildren(child1);
+				validateChildren(child2);
+			}
+			break;
+
+			// Need to add calls to validate method for TSP2 representation?
+
+
+		case 3:     //  Uniform Crossover - should only be used for TSP2 representation (unicode)?
+
+			// Crossover rate
+			double p = 0.5;
+
+			for(int i = 0; i < (Parameters.numGenes * Parameters.geneSize); i++)
+			{
+				randnum = Search.r.nextDouble();
+				if(randum > p)
+				{
+					child1.chromo += parent2.chromo.charAt(i);
+					child2.chromo += parent1.chromo.charAt(i);
+				}
+				else
+				{
+					child1.chromo += parent1.chromo.charAt(i);
+					child2.chromo += parent2.chromo.charAt(i);
+				}
+			}
+
+			// Validate if child chromosomes are valid strings for hex representation
+			if (Parameters.problemType.equals("TSP"))
+			{
+				validateChildren(child1);
+				validateChildren(child2);
+			}
+			break;
+			
+			// Need to add calls to validate method for TSP2 representation?
+			
 
 		default:
 			System.out.println("ERROR - Bad crossover method selected");
