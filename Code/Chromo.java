@@ -305,6 +305,41 @@ public class Chromo
 			X.chromo = temp.toString();
 		}
 	}
+	private static void validateChildrenTSP2(Chromo X)
+	{
+		Set<Integer> chromoRange = new HashSet<Integer>();
+		ArrayList<Integer> citiesToFix = new ArrayList<Integer>();
+		for (int z=0; z<Parameters.numGenes * Parameters.geneSize; z+=3)
+		{
+			int curCity = X.chromo.charAt(z);
+			
+			// Check to make sure the city is in range
+			if (curCity > Parameters.numGenes || curCity <= 0)
+				citiesToFix.add(z);
+			// Check to see if city is repear
+			else if (chromoRange.contains(curCity))
+				citiesToFix.add(z);
+			// Valid Unique city
+			else
+				chromoRange.add(curCity);			
+		}
+		Set<Integer> difference = new HashSet<Integer>();
+		difference.addAll(TSP2.range);
+		difference.removeAll(chromoRange);
+		if(!difference.isEmpty())
+		{
+			Iterator<Integer> iter = difference.iterator();
+			StringBuffer temp = new StringBuffer(X.chromo);
+			String gene = "";
+			for (int city : citiesToFix)
+			{
+				int validCity = iter.next();
+				gene = Character.toChars(validCity+100).toString();
+				temp.replace(city, city+1, gene);
+			}
+			X.chromo = temp.toString();
+		}
+	}
 	public static void mateParents(int pnum1, int pnum2, Chromo parent1, Chromo parent2, Chromo child1, Chromo child2){
 
 		int xoverPoint1;
@@ -326,13 +361,19 @@ public class Chromo
 				validateChildren(child1);
 				validateChildren(child2);
 			}
+			else if (Parameters.problemType.equals("TSP2"))
+			{
+				validateChildrenTSP2(child1);
+				validateChildrenTSP2(child2);
+			}
 			break;
+
 
 		case 2:     //  Two Point Crossover
 			
 			// Select 2 random crossover points
-			xoverPoint1 = 1 + (int)(Search.r.nextDouble() * (Parameters.numGenes * Parameters.geneSize - 1));
-			xoverPoint2 = 1 + (int)(Search.r.nextDouble() * (Parameters.numGenes * Parameters.geneSize - 1));
+			xoverPoint1 = 1 + (int)(Search.r.nextDouble() * ((Parameters.numGenes * Parameters.geneSize) - 1));
+			xoverPoint2 = 1 + (int)(Search.r.nextDouble() * ((Parameters.numGenes * Parameters.geneSize) - 1));
 
 			// Create children from chromosomes of both parents
 			child1.chromo = parent1.chromo.substring(0, xoverPoint1) + parent2.chromo.substring(xoverPoint1, xoverPoint2) + parent1.chromo.substring(xoverPoint2);
@@ -344,9 +385,14 @@ public class Chromo
 				validateChildren(child1);
 				validateChildren(child2);
 			}
+			else if (Parameters.problemType.equals("TSP2"))
+			{
+				validateChildrenTSP2(child1);
+				validateChildrenTSP2(child2);
+			}
 			break;
 
-			// Need to add calls to validate method for TSP2 representation?
+			
 
 
 		case 3:     //  Uniform Crossover - should only be used for TSP2 representation (unicode)?
@@ -357,7 +403,7 @@ public class Chromo
 			for(int i = 0; i < (Parameters.numGenes * Parameters.geneSize); i++)
 			{
 				randnum = Search.r.nextDouble();
-				if(randum > p)
+				if(randnum > p)
 				{
 					child1.chromo += parent2.chromo.charAt(i);
 					child2.chromo += parent1.chromo.charAt(i);
@@ -375,9 +421,13 @@ public class Chromo
 				validateChildren(child1);
 				validateChildren(child2);
 			}
+			else if (Parameters.problemType.equals("TSP2"))
+			{
+				validateChildrenTSP2(child1);
+				validateChildrenTSP2(child2);
+			}
 			break;
 			
-			// Need to add calls to validate method for TSP2 representation?
 			
 
 		default:
