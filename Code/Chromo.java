@@ -309,7 +309,7 @@ public class Chromo
 	{
 		Set<Integer> chromoRange = new HashSet<Integer>();
 		ArrayList<Integer> citiesToFix = new ArrayList<Integer>();
-		for (int z=0; z<Parameters.numGenes * Parameters.geneSize; z+=3)
+		for (int z=0; z<Parameters.numGenes * Parameters.geneSize; z++)
 		{
 			int curCity = X.chromo.charAt(z);
 			
@@ -373,7 +373,7 @@ public class Chromo
 			
 			// Select 2 random crossover points
 			xoverPoint1 = 1 + (Search.r.nextInt(Parameters.numGenes * Parameters.geneSize / 2) - 1);
-			xoverPoint2 = xoverPoint1 + 1 + (Search.r.nextInt(Parameters.numGenes * Parameters.geneSize / 2));
+			xoverPoint2 = xoverPoint1 + 1 + (Search.r.nextInt(Parameters.numGenes * Parameters.geneSize / 2) - 1);
 			
 
 			// Create children from chromosomes of both parents
