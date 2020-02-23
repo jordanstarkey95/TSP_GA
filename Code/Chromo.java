@@ -370,18 +370,30 @@ public class Chromo
 			break;
 
 
-		case 2:     //  Two Point Crossover
+		case 2:     //  Two Point Crossover: Adapted from 1-point crossover implementation.
 			
 			// Select 2 random crossover points
-			xoverPoint1 = 1 + (Search.r.nextInt(Parameters.numGenes * Parameters.geneSize / 2) - 1);
-			xoverPoint2 = xoverPoint1 + 1 + (Search.r.nextInt(Parameters.numGenes * Parameters.geneSize / 2) - 1);
-			
+			xoverPoint1 = 1 + (int)(Search.r.nextDouble() * (Parameters.numGenes * Parameters.geneSize-1));
+			xoverPoint2 = 1 + (int)(Search.r.nextDouble() * (Parameters.numGenes * Parameters.geneSize-1));
 
 			// Create children from chromosomes of both parents
+			if(xoverPoint1 < xoverPoint2)
+			{
 			child1.chromo = parent1.chromo.substring(0, xoverPoint1) + parent2.chromo.substring(xoverPoint1, xoverPoint2) + parent1.chromo.substring(xoverPoint2);
 			child2.chromo = parent2.chromo.substring(0, xoverPoint1) + parent1.chromo.substring(xoverPoint1, xoverPoint2) + parent2.chromo.substring(xoverPoint2);
+			}
+			else if(xoverPoint1 > xoverPoint2)
+			{
+			child1.chromo = parent1.chromo.substring(0, xoverPoint2) + parent2.chromo.substring(xoverPoint2, xoverPoint1) + parent1.chromo.substring(xoverPoint1);
+			child2.chromo = parent2.chromo.substring(0, xoverPoint2) + parent1.chromo.substring(xoverPoint2, xoverPoint1) + parent2.chromo.substring(xoverPoint1);
+			}
+			else
+			{
+				System.out.println("ERROR - Bad crossover points selected");
+				break;
+			}
 
-			// Validate if child chromosomes are valid strings for hex representation. Taken from 1-point xover implementation.
+			// Validate if child chromosomes are valid strings for hex representation
 			if (Parameters.problemType.equals("TSP"))
 			{
 				validateChildren(child1);
@@ -396,9 +408,7 @@ public class Chromo
 			break;
 
 			
-
-
-		case 3:     //  Uniform Crossover - should only be used for TSP2 representation (unicode)?
+		case 3:     //  Uniform Crossover 
 
 			
 			double p = 0.5;
