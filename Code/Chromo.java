@@ -256,7 +256,7 @@ public class Chromo
 	}
 
 	//  Produce a new child from two parents  **********************************
-	private static void validateChildren(Chromo X)
+	private static void validateChildrenTSP(Chromo X)
 	{
 		Set<Integer> chromoRange = new HashSet<Integer>();
 		ArrayList<Integer> citiesToFix = new ArrayList<Integer>();
@@ -304,6 +304,43 @@ public class Chromo
 			X.chromo = temp.toString();
 		}
 	}
+	
+	private static void validateChildrenTSP2(Chromo X)
+	{
+		Set<Integer> chromoRange = new HashSet<Integer>();
+		ArrayList<Integer> citiesToFix = new ArrayList<Integer>();
+		for (int z=0; z<Parameters.numGenes * Parameters.geneSize; z+=3)
+		{
+			int curCity = X.chromo.charAt(z);
+			
+			// Check to make sure the city is in range
+			if (curCity > Parameters.numGenes || curCity <= 0)
+				citiesToFix.add(z);
+			// Check to see if city is repear
+			else if (chromoRange.contains(curCity))
+				citiesToFix.add(z);
+			// Valid Unique city
+			else
+				chromoRange.add(curCity);			
+		}
+		Set<Integer> difference = new HashSet<Integer>();
+		difference.addAll(TSP2.range);
+		difference.removeAll(chromoRange);
+		if(!difference.isEmpty())
+		{
+			Iterator<Integer> iter = difference.iterator();
+			StringBuffer temp = new StringBuffer(X.chromo);
+			String gene = "";
+			for (int city : citiesToFix)
+			{
+				int validCity = iter.next();
+				gene = Character.toChars(validCity+100).toString();
+				temp.replace(city, city+1, gene);
+			}
+			X.chromo = temp.toString();
+		}
+	}
+	
 	public static void mateParents(int pnum1, int pnum2, Chromo parent1, Chromo parent2, Chromo child1, Chromo child2){
 
 		int xoverPoint1;
@@ -322,8 +359,13 @@ public class Chromo
 			
 			if (Parameters.problemType.equals("TSP"))
 			{
-				validateChildren(child1);
-				validateChildren(child2);
+				validateChildrenTSP(child1);
+				validateChildrenTSP(child2);
+			}
+			else if (Parameters.problemType.equals("TSP2"))
+			{
+				validateChildrenTSP2(child1);
+				validateChildrenTSP2(child2);
 			}
 			break;
 
