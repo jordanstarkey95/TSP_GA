@@ -85,6 +85,7 @@ public class TSP2 extends FitnessFunction{
 		X.rawFitness = 0;
 		Set<Integer> chromoRange = new HashSet<Integer>();
 		try{
+			//System.out.println(X.chromo);
 			for (int z=0; z<Parameters.numGenes * Parameters.geneSize; z++){
 				int curCity = X.chromo.charAt(z) - '0';
 				//System.out.println(X.chromo.charAt(z) - '0');
@@ -112,13 +113,15 @@ public class TSP2 extends FitnessFunction{
 			Set<Integer> difference = new HashSet<Integer>();
 			difference.addAll(TSP2.range);
 			difference.removeAll(chromoRange);
+			//System.out.println(TSP2.range);
+			//System.out.println(chromoRange);
 			
-			if (!difference.isEmpty())
+			if (!difference.isEmpty()) {
 				X.rawFitness = Integer.MAX_VALUE;
+			}
 		}
 		catch(IndexOutOfBoundsException e)
 		{
-			//System.out.println(e);
 			X.rawFitness = Integer.MAX_VALUE;
 		}
 		

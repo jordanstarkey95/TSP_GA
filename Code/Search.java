@@ -212,7 +212,7 @@ public class Search {
 					member[i].sclFitness = 0;
 					member[i].proFitness = 0;
 
-					problem.doRawFitness(member[i]);
+					problem.doRawFitness(member[i]); ///////////////////////////////////calc fitness
 
 					sumRawFitness = sumRawFitness + member[i].rawFitness;
 					sumRawFitness2 = sumRawFitness2 +
@@ -393,7 +393,7 @@ public class Search {
 							return Double.valueOf(c1.rawFitness).compareTo(c2.rawFitness);
 						}
 					});
-					System.out.println("Sorting Complete!");
+					//System.out.println("Sorting Complete!");
 					// get the total rank sum
 					int r_sum = 0;
 					for (int j = 0; j < Parameters.popSize; j++)
