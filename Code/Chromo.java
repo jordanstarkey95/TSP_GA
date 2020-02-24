@@ -74,6 +74,8 @@ public class Chromo
 			//this.chromo += String.valueOf(location);
 			//System.out.println(String.valueOf(location));
 		}
+		System.out.println(this.chromo);
+		System.out.println("LENGTH = " + this.chromo.length());
 		this.tspRep = 2;
 		this.numCities = numCities;
 		// set other member variables
@@ -328,12 +330,11 @@ public class Chromo
 	{
 		Set<Integer> chromoRange = new HashSet<Integer>();
 		ArrayList<Integer> citiesToFix = new ArrayList<Integer>();
-		System.out.println("LENGTH = " + X.chromo.length());
-		System.out.println("SIZE=" + X.chromo.length());
+		//System.out.println(X.chromo);
 		for (int z=0; z< X.chromo.length(); z++)
 		{
 			int curCity = X.chromo.charAt(z) - '0';
-			//System.out.println(curCity);
+			System.out.println(curCity);
 			
 			// Check to make sure the city is in range
 			if (curCity > Parameters.numGenes || curCity <= 0)
@@ -348,6 +349,8 @@ public class Chromo
 		Set<Integer> difference = new HashSet<Integer>();
 		difference.addAll(TSP2.range);
 		difference.removeAll(chromoRange);
+		//System.out.println(citiesToFix);
+		//System.out.println(difference);
 		if(!difference.isEmpty())
 		{
 			Iterator<Integer> iter = difference.iterator();
