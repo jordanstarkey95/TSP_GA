@@ -439,8 +439,8 @@ public class Chromo
 			// Validate if child chromosomes are valid strings for hex representation
 			if (Parameters.problemType.equals("TSP"))
 			{
-				validateChildren(child1);
-				validateChildren(child2);
+				validateChildrenTSP(child1);
+				validateChildrenTSP(child2);
 			}
 			//Validate child chromosomes for unicode representation.
 			else if (Parameters.problemType.equals("TSP2"))
@@ -487,8 +487,8 @@ public class Chromo
 			// Validate if child chromosomes are valid strings for hex representation
 			if (Parameters.problemType.equals("TSP"))
 			{
-				validateChildren(child1);
-				validateChildren(child2);
+				validateChildrenTSP(child1);
+				validateChildrenTSP(child2);
 			}
 			//Validate child chromosomes for unicode representation.
 			else if (Parameters.problemType.equals("TSP2"))
