@@ -1,6 +1,6 @@
 Experiment ID                :tsp
-Problem Type                 :TSP
-Data Input File Name         :rl1323.tsp
+Problem Type                 :TSP2
+Data Input File Name         :berlin52.tsp
 Number of Runs               :50
 Generations per Run          :50
 Population Size              :100
@@ -11,9 +11,9 @@ Crossover Rate (4)           :1.0
 Mutation Type (5)            :0
 Mutation Rate (6)            :0.005
 Random Number Seed           :75982
-Number of Genes/Points (7)   :1323
-Size of Genes (18)           :3
-
+Number of Genes/Points (7)   :52
+Size of Genes (18)           :1
+Fitness Eval Function (9)    :0
 Notes:
 
 1)  Selection Type Codes    1 = Proportional Selection
@@ -41,3 +41,4 @@ Notes:
 
 8)	Determines number of bits in each gene.  Number of Genes times Size
 	gives the number of bits in each chromosome.
+9)  Fitness Evaluation Function  0 for Euclidean and 1 for Manhatten distance
