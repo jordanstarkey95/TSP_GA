@@ -15,6 +15,8 @@ public class TSP2 extends FitnessFunction{
 	public double [][] cityPoints;
 	public String dataSet;
 	public static Set<Integer> range;
+	// A flag set by the parameters for using either Euclidean or Manhatten distance
+	public int distanceFunction;
 
 /*******************************************************************************
 *                            STATIC VARIABLES                                  *
@@ -25,10 +27,11 @@ public class TSP2 extends FitnessFunction{
 *                              CONSTRUCTORS                                    *
 *******************************************************************************/
 
-	public TSP2() throws java.io.IOException
+	public TSP2(int distanceFunction) throws java.io.IOException
 	{
 		name = "Traveling Salesman Problem";
 		range = new HashSet<Integer>();
+		this.distanceFunction = distanceFunction;
 		
 		loadCityData();
 	}
@@ -82,28 +85,40 @@ public class TSP2 extends FitnessFunction{
 		X.rawFitness = 0;
 		Set<Integer> chromoRange = new HashSet<Integer>();
 		try{
-			for (int z=0; z<Parameters.numGenes * Parameters.geneSize; z++){// move 3 char at a time
-				int curCity = X.chromo.charAt(z)-100;
+			//System.out.println(X.chromo);
+			for (int z=0; z<Parameters.numGenes * Parameters.geneSize; z++){
+				int curCity = X.chromo.charAt(z) - '0';
+				//System.out.println(X.chromo.charAt(z) - '0');
+				//int curCity = Character.getNumericValue(X.chromo.charAt(z));
+				//System.out.println(curCity);
 				int nextCity = 0;
 				if (z+1 < Parameters.numGenes * Parameters.geneSize)
-					nextCity = X.chromo.charAt(z+1)-100;
+					nextCity = X.chromo.charAt(z+1) - '0';
 				else
-					nextCity = X.chromo.charAt(0)-100; // loop back to the first city
+					nextCity = X.chromo.charAt(0) - '0'; // loop back to the first city
 				
 				chromoRange.add(curCity); // keep track of the cities we see
 				// Distance between 2 points
-				X.rawFitness += Math.sqrt( 
-								Math.pow((this.cityPoints[curCity][0]-this.cityPoints[nextCity][0]), 2)
-								+ Math.pow((this.cityPoints[curCity][1]-this.cityPoints[nextCity][1]), 2)
-								);
+				if(this.distanceFunction == 0) {
+					X.rawFitness += Math.sqrt( 
+									Math.pow((this.cityPoints[curCity][0]-this.cityPoints[nextCity][0]), 2)
+									+ Math.pow((this.cityPoints[curCity][1]-this.cityPoints[nextCity][1]), 2)
+									);
+				} else {
+					X.rawFitness += Math.abs(this.cityPoints[curCity][0]-this.cityPoints[nextCity][1]) 
+									+ Math.abs(this.cityPoints[curCity][0]-this.cityPoints[nextCity][1]);			
+				}
 			}
 			
 			Set<Integer> difference = new HashSet<Integer>();
 			difference.addAll(TSP2.range);
 			difference.removeAll(chromoRange);
+			//System.out.println(TSP2.range);
+			//System.out.println(chromoRange);
 			
-			if (!difference.isEmpty())
+			if (!difference.isEmpty()) {
 				X.rawFitness = Integer.MAX_VALUE;
+			}
 		}
 		catch(IndexOutOfBoundsException e)
 		{

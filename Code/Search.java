@@ -62,6 +62,13 @@ public class Search {
 
 	private static double fitnessStats[][];  // 0=Avg, 1=Best
 
+	//////////////////////////////////////////////////////
+	// For HW1, calculate the standard deviation of the avg best fitness averaged over 50 runs\
+	private static double stdDevStats[][];
+	private static double stdevBestFitness;
+	private static double stdDevBestStats[][];
+	//////////////////////////////////////////////////////
+
 /*******************************************************************************
 *                              CONSTRUCTORS                                    *
 *******************************************************************************/
@@ -90,12 +97,29 @@ public class Search {
 		FileWriter summaryOutput = new FileWriter(summaryFileName);
 		parmValues.outputParameters(summaryOutput);
 
+				//////////////////////////////////////////////////////
+		// Initialize my custom global variable for HW 1 for recording SD of avgavg and bestavg
+		stdDevStats = new double[2][Parameters.generations];
+		stdDevBestStats = new double[Parameters.generations][Parameters.numRuns];
+		//////////////////////////////////////////////////////
+
 	//	Set up Fitness Statistics matrix
 		fitnessStats = new double[2][Parameters.generations];
 		for (int i=0; i<Parameters.generations; i++){
 			fitnessStats[0][i] = 0;
 			fitnessStats[1][i] = 0;
+
+			//////////////////////////////////////////////////////
+			// Initialize HW 1
+			stdDevStats[0][i] = 0; // turn this into 1d array i guess
+			stdDevStats[1][i] = 0; // get rid of this?
+		
+			//////////////////////////////////////////////////////
 		}
+
+		for(int i =0; i <Parameters.generations; i++)
+			for(int j = 0; j < Parameters.numRuns; j++)
+				stdDevBestStats[i][j] = 0;
 
 	//	Problem Specific Setup - For new new fitness function problems, create
 	//	the appropriate class file (extending FitnessFunction.java) and add
@@ -111,14 +135,14 @@ public class Search {
 		}
 		else if (Parameters.problemType.equals("TSP"))
 		{
-			problem = new TSP();
+			problem = new TSP(Parameters.fitnessEval);
 			tspRep = 1;
 			isTSP = true;
-			optimalSolution = 0;
+			optimalSolution = 0; //how do we know the optimal solution for TSP?
 		}
 		else if (Parameters.problemType.equals("TSP2"))
 		{
-			problem = new TSP2();
+			problem = new TSP2(Parameters.fitnessEval);
 			tspRep = 2;
 			isTSP = true;
 			optimalSolution = 0;
@@ -212,7 +236,7 @@ public class Search {
 					member[i].sclFitness = 0;
 					member[i].proFitness = 0;
 
-					problem.doRawFitness(member[i]);
+					problem.doRawFitness(member[i]); ///////////////////////////////////calc fitness
 
 					sumRawFitness = sumRawFitness + member[i].rawFitness;
 					sumRawFitness2 = sumRawFitness2 +
@@ -269,6 +293,10 @@ public class Search {
 							/
 							(Parameters.popSize-1)
 							);
+
+				stdDevStats[0][G] += stdevRawFitness;
+				// Running sum of this generations best fitness
+				stdDevBestStats[G][R - 1] += bestOfGenChromo.rawFitness;
 
 				// Output generation statistics to screen
 				System.out.println(R + "\t" + G +  "\t" + (int)bestOfGenChromo.rawFitness + "\t" + averageRawFitness + "\t" + stdevRawFitness);
@@ -393,7 +421,7 @@ public class Search {
 							return Double.valueOf(c1.rawFitness).compareTo(c2.rawFitness);
 						}
 					});
-					System.out.println("Sorting Complete!");
+					//System.out.println("Sorting Complete!");
 					// get the total rank sum
 					int r_sum = 0;
 					for (int j = 0; j < Parameters.popSize; j++)
@@ -460,23 +488,33 @@ public class Search {
 		problem.doPrintGenes(bestOverAllChromo, summaryOutput);
    
 
-		//	Output Fitness Statistics matrix
-		summaryOutput.write("Gen                 AvgFit              BestFit \n");
+		summaryOutput.write("Gen                 AvgFit              BestFit              StdAvg              StdBest\n");
+		
 		for (int i=0; i<Parameters.generations; i++){
 			Hwrite.left(i, 15, summaryOutput);
-			double avgAvgFit = fitnessStats[0][i]/Parameters.numRuns;
-			double avgBestFit = fitnessStats[1][i]/Parameters.numRuns;
-			
-			
-			stdevAvgAvgFit= Math.sqrt(
-							Math.abs(sumRawFitness2 - 
-							sumRawFitness*sumRawFitness/Parameters.popSize)
-							/
-							(Parameters.popSize-1)
-							);
-			
-			Hwrite.left(avgAvgFit, 20, 2, summaryOutput);
-			Hwrite.left(avgBestFit, 20, 2, summaryOutput);
+			Hwrite.left(fitnessStats[0][i]/Parameters.numRuns, 20, 2, summaryOutput);
+			Hwrite.left(fitnessStats[1][i]/Parameters.numRuns, 20, 2, summaryOutput);
+			////////////////////////////////////////////
+			Hwrite.left(stdDevStats[0][i]/Parameters.numRuns, 20, 2, summaryOutput);
+			double stdev = 0.0;
+			//for(int m = 0; m <Parameters.generations; m++) {
+				double [] row = stdDevBestStats[i];
+				double sum = 0.0;
+				for(int j = 0; j < row.length; j++) {
+					sum += row[j];
+				}
+				double mean = sum / (double)row.length;
+
+				double sqDiff = 0;
+		        for (int k = 0; k < row.length; k++) 
+		            sqDiff += (row[k] - mean) * (row[k] - mean);
+		         
+		        stdev = Math.sqrt((double)sqDiff/row.length);
+			//} 
+			Hwrite.left(stdev, 20, 2, summaryOutput);
+			//System.out.println(avgeSdBest);
+			//System.out.println();
+			////////////////////////////////////////////
 			summaryOutput.write("\n");
 		}
 

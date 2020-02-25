@@ -15,6 +15,8 @@ public class TSP extends FitnessFunction{
 	public double [][] cityPoints;
 	public String dataSet;
 	public static Set<Integer> range;
+	// A flag set by the parameters for using either Euclidean or Manhatten distance
+	public int distanceFunction;
 
 /*******************************************************************************
 *                            STATIC VARIABLES                                  *
@@ -25,10 +27,11 @@ public class TSP extends FitnessFunction{
 *                              CONSTRUCTORS                                    *
 *******************************************************************************/
 
-	public TSP() throws java.io.IOException
+	public TSP(int distanceFunction) throws java.io.IOException
 	{
 		name = "Traveling Salesman Problem";
 		range = new HashSet<Integer>();
+		this.distanceFunction = distanceFunction;
 		
 		loadCityData();
 	}
@@ -92,16 +95,22 @@ public class TSP extends FitnessFunction{
 				
 				chromoRange.add(curCity); // keep track of the cities we see
 				// Distance between 2 points
-				X.rawFitness += Math.sqrt( 
-								Math.pow((this.cityPoints[curCity][0]-this.cityPoints[nextCity][0]), 2)
-								+ Math.pow((this.cityPoints[curCity][1]-this.cityPoints[nextCity][1]), 2)
-								);
+				if(this.distanceFunction == 0) {
+					X.rawFitness += Math.sqrt( 
+									Math.pow((this.cityPoints[curCity][0]-this.cityPoints[nextCity][0]), 2)
+									+ Math.pow((this.cityPoints[curCity][1]-this.cityPoints[nextCity][1]), 2)
+									);
+				} else {
+					X.rawFitness += Math.abs(this.cityPoints[curCity][0]-this.cityPoints[nextCity][0]) 
+									+ Math.abs(this.cityPoints[curCity][1]-this.cityPoints[nextCity][1]);			
+				}
 			}
 			
 			Set<Integer> difference = new HashSet<Integer>();
 			difference.addAll(TSP.range);
 			difference.removeAll(chromoRange);
 			
+
 			if (!difference.isEmpty())
 				X.rawFitness = Integer.MAX_VALUE;
 		}

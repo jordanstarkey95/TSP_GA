@@ -39,6 +39,9 @@ public class Parameters
 	public static int numGenes;
 	public static int geneSize;
 
+	// Flag for using fitness eval function
+	public static int fitnessEval;
+
 /*******************************************************************************
 *                              CONSTRUCTORS                                    *
 *******************************************************************************/
@@ -68,6 +71,9 @@ public class Parameters
 		seed = Long.parseLong(parmInput.readLine().substring(30).trim());
 		numGenes = Integer.parseInt(parmInput.readLine().substring(30).trim());
 		geneSize = Integer.parseInt(parmInput.readLine().substring(30).trim());
+
+		//
+		fitnessEval = Integer.parseInt(parmInput.readLine().substring(30).trim());
 
 		parmInput.close();
 
@@ -109,6 +115,9 @@ public class Parameters
 		output.write("Random Number Seed           :  " + seed + "\n");
 		output.write("Number of Genes/Points       :  " + numGenes + "\n");
 		output.write("Size of Genes                :  " + geneSize + "\n");
+
+		// Additional parameter for fitness eval function
+		output.write("Fitness Evaluation Function (0 for Euclidean and 1 for Manhatten)                :  " + fitnessEval + "\n");
 
 		output.write("\n\n");
 
