@@ -11,7 +11,7 @@ Crossover Rate (4)           :1.0
 Mutation Type (5)            :2
 Mutation Rate (6)            :0.001
 Random Number Seed           :75982
-Number of Genes/Points (7)   :48
+Number of Genes/Points (7)   :1323
 Size of Genes (18)           :1
 Fitness Eval Function (9)    :0
 Notes:
