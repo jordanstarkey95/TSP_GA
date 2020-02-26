@@ -213,6 +213,7 @@ public class Chromo
 				mutChromo = mutChromo + x;
 			}
 			this.chromo = mutChromo;
+			validateChildrenTSP2(this);
 			break; 
 
 		default:

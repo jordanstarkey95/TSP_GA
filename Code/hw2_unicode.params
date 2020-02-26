@@ -1,6 +1,6 @@
 Experiment ID                :tsp
 Problem Type                 :TSP2
-Data Input File Name         :att48.tsp
+Data Input File Name         :rl1323.tsp
 Number of Runs               :50
 Generations per Run          :50
 Population Size              :1000
@@ -8,10 +8,10 @@ Selection Method (1)         :1
 Fitness Scaling Type (2)     :1
 Crossover Type (3)           :3
 Crossover Rate (4)           :1.0
-Mutation Type (5)            :1
+Mutation Type (5)            :2
 Mutation Rate (6)            :0.001
 Random Number Seed           :75982
-Number of Genes/Points (7)   :52
+Number of Genes/Points (7)   :48
 Size of Genes (18)           :1
 Fitness Eval Function (9)    :0
 Notes:
@@ -34,6 +34,7 @@ Notes:
 
 5)  Mutation Type Codes     0 = No Mutation
 							1 = Flip Bit
+							2 = Unicode
 
 6)  Mutation Rates from 0 to 1, Use "0" to turn off mutation
 
