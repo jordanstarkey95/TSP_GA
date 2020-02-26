@@ -46,7 +46,7 @@ public class TSP2 extends FitnessFunction{
 		String line = "";
 		BufferedReader cityInput = new BufferedReader(new FileReader(Parameters.dataInputFileName) ); 
 		
-		this.dataSet = cityInput.readLine().substring(6);
+		this.dataSet = cityInput.readLine().substring(7);
 		
 		// Init array to store city data
 		if (this.dataSet.equals("berlin52"))
