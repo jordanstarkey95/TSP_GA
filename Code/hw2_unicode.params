@@ -1,6 +1,6 @@
 Experiment ID                :tsp
 Problem Type                 :TSP2
-Data Input File Name         :berlin52.tsp
+Data Input File Name         :att48.tsp
 Number of Runs               :50
 Generations per Run          :50
 Population Size              :1000

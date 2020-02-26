@@ -354,6 +354,7 @@ public class Chromo
 		//System.out.println("Valid cities: " + chromoRange);
 		//System.out.println("Invalid Cities: " + citiesToFix);
 		//System.out.println("Remaing valid cities: " + difference);
+		//System.out.println("==================================");
 		if(!difference.isEmpty())
 		{
 			Iterator<Integer> iter = difference.iterator();
@@ -361,6 +362,9 @@ public class Chromo
 			String gene = "";
 			for (int city : citiesToFix)
 			{
+				if (!iter.hasNext())
+					break;
+				
 				int validCity = iter.next();
 				char encodedValidCity = (char)(validCity + '0');
 				temp.setCharAt(city, encodedValidCity);
